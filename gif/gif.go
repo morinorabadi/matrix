@@ -1,5 +1,0 @@
-package gif
-
-func Create() {
-
-}

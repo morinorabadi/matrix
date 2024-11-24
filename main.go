@@ -11,47 +11,49 @@ import (
 )
 
 func main() {
-	// Define image dimensions
-	const width = 256
-	const height = 256
-
+	// Define gif dimensions
+	/*
+		change this properties to generate your rain matrix
+	*/
+	const width = 600
+	const height = 400
 	const totalFrames = 60
 
 	// Slice to hold the frames
 	var frames []*image.Paletted
 	var delays []int
 
-	// generate blinks
-	totalBlinks := 800
-	var Blinks []rope.Blink = make([]rope.Blink, totalBlinks)
-	const blinkFrameLength = 5
-	for i := 0; i < totalBlinks; i++ {
-		startFrame := rand.Intn(totalFrames - blinkFrameLength)
-		endFrame := startFrame + blinkFrameLength
-		Blinks[i] = rope.GenerateBlink(startFrame, endFrame, rand.Intn(width), rand.Intn(width))
+	totalRopes := width * height * totalFrames / 40000
+	var ropes []rope.Rope = make([]rope.Rope, totalRopes)
+	for i := 0; i < totalRopes; i++ {
+		startFrame := rand.Intn(totalFrames+60) - 30
+		rWidth := rand.Intn(width/9) * 9
+		rHeight := rand.Intn(height/9) * 9
+		rHeight += rand.Intn(50) - 50
+		ropes[i] = rope.GenerateRope(rWidth, rHeight, startFrame, totalFrames)
+	}
+
+	plate := color.Palette{
+		color.RGBA{R: 255, G: 0, B: 0},
+		color.RGBA{R: 0, G: 0, B: 0},
+		color.RGBA{R: 255, G: 255, B: 255},
+	}
+	for j := 0; j <= 255; j += 16 {
+		plate = append(plate, color.RGBA{R: 0, G: uint8(j), B: 0})
 	}
 
 	// Generate frames
 	for frame := 0; frame < totalFrames; frame++ { // 10 frames
 
-		plate := color.Palette{
-			color.RGBA{R: 255, G: 0, B: 0},
-			color.RGBA{R: 0, G: 0, B: 0},
-			color.RGBA{R: 255, G: 255, B: 255},
-		}
-		for j := 0; j < 255; j += 64 {
-			plate = append(plate, color.RGBA{R: 0, G: uint8(j), B: 0})
-		}
-
 		// Convert RGBA to Paletted
-		paletted := image.NewPaletted(image.Rectangle{Min: image.Pt(0, 0), Max: image.Pt(255, 255)}, plate)
+		paletted := image.NewPaletted(image.Rectangle{Min: image.Pt(0, 0), Max: image.Pt(width, height)}, plate)
 		for x := 0; x < width; x++ {
 			for y := 0; y < height; y++ {
 				paletted.Set(x, y, color.Black)
 			}
 		}
 
-		for _, Blink := range Blinks {
+		for _, Blink := range ropes {
 			Blink.Draw(paletted, frame)
 		}
 

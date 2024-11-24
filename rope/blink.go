@@ -24,7 +24,7 @@ func (b Blink) Draw(paletted *image.Paletted, frame int) {
 	if frame < b.startFrame {
 		return
 	}
-	alpha := float32(frame-b.startFrame) / float32(b.length)
+	alpha := 1.0 - float32(frame-b.startFrame)/float32(b.length)
 	img := numberCreator.ZeroOrOne(rand.Intn(10), uint8(alpha*255.0))
 	for ix := 0; ix < 5; ix++ {
 		for iy := 0; iy < 7; iy++ {

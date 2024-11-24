@@ -17,7 +17,7 @@ func main() {
 	*/
 	const width = 600
 	const height = 400
-	const totalFrames = 60
+	const totalFrames = 30
 
 	// Slice to hold the frames
 	var frames []*image.Paletted

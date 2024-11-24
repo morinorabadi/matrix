@@ -25,7 +25,7 @@ func (b Blink) Draw(paletted *image.Paletted, frame int) {
 		return
 	}
 	alpha := float32(frame-b.startFrame) / float32(b.length)
-	img := numberCreator.ZeroOrOne(rand.Intn(2) != 0, uint8(alpha*255))
+	img := numberCreator.ZeroOrOne(rand.Intn(10), uint8(alpha*255.0))
 	for ix := 0; ix < 5; ix++ {
 		for iy := 0; iy < 7; iy++ {
 			paletted.Set(b.offsetX+ix, b.offsetY+iy, img.At(ix, iy))
